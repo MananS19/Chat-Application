@@ -5,20 +5,16 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
 
-app.use(express.static(__dirname+'index.html'));
+app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
 
-// var Message = mongoose.model('Message',{
-//   name : String,
-//   message : String
-// })
-
-// var dbUrl = 'mongodb://username:password@ds257981.mlab.com:57981/simple-chat'
-
-app.get('/', (req,res) => {
-    res.sendFile(__dirname + '/index.html');
+var Message = mongoose.model('Message',{
+  name : String,
+  message : String
 })
+
+var dbUrl = 'mongodb://localhost:27017/DC-Chat-App'
 
 app.get('/messages', (req, res) => {
   Message.find({},(err, messages)=> {
@@ -46,10 +42,10 @@ io.on('connection', () =>{
   console.log('a user is connected')
 })
 
-// mongoose.connect(dbUrl ,{useMongoClient : true} ,(err) => {
-//   console.log('mongodb connected',err);
-// })
+mongoose.connect(dbUrl ,(err) => {
+  console.log('mongodb connected',err);
+})
 
-var server = http.listen(3001, () => {
+var server = http.listen(3000, () => {
   console.log('server is running on port', server.address().port);
 });
