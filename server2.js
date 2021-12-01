@@ -15,7 +15,7 @@ var Message = mongoose.model('Message',{
   message : String
 })
 
-var dbUrl = 'mongodb://localhost:27017/DC-Chat-App'
+var dbUrl = 'mongodb://localhost:27017/DC-Chat-App2'
 
 app.get('/messages', (req, res) => {
   Message.find({},(err, messages)=> {
@@ -32,7 +32,7 @@ app.get('/messages', (req, res) => {
 app.post('/messages', (req, res) => {
   var message = new Message(req.body);
   axios
-  .post('http://localhost:3001/communicate', req.body);
+  .post('http://localhost:3000/communicate', req.body);
   message.save((err) =>{
     if(err)
       sendStatus(500);
@@ -51,6 +51,7 @@ app.post('/communicate', (req, res) => {
   })
 })
 
+
 io.on('connection', (socket) =>{
   console.log(io.engine.clientsCount + ' users are connected');
 })
@@ -60,15 +61,14 @@ app.get("/load", (req, res) => {
   res.send({load: count});
 })
 
-
 mongoose.connect(dbUrl ,(err) => {
   console.log('mongodb connected',err);
 })
 
 app.get("/", (req, res)=>{
-  res.sendFile(__dirname + "/index.html");
+  res.sendFile(__dirname + "/index2.html");
 })
 
-var server = http.listen(3000, () => {
+var server = http.listen(3001, () => {
   console.log('server is running on port', server.address().port);
 });
